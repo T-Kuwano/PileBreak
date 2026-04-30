@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="PileBreak.Views.SettingPage"
+             Title="設定">
+
+    <VerticalStackLayout Padding="20" Spacing="20">
+
+        <Label Text="Steam 連携設定" 
+               FontSize="18" 
+               FontAttributes="Bold" />
+
+        <VerticalStackLayout Spacing="5">
+            <Label Text="現在の Steam ID" FontSize="Caption" />
+            <!-- 保存されているIDを表示、または直接入力も可能 -->
+            <Entry Text="{Binding SteamId}" 
+                   Placeholder="17桁の数字を入力、またはログイン"
+                   Keyboard="Numeric" />
+        </VerticalStackLayout>
+
+        <Label Text="Steam API Key" FontSize="Caption" />
+        <Entry Text="{Binding SteamApiKey}" 
+       Placeholder="APIキーを入力してください"
+       IsPassword="True" />
+        <!-- キーは見えないように伏せると安全 -->
+
+        <!-- Steam ログインボタン -->
+        <Button Text="Steam でログインして取得"
+                Command="{Binding LoginSteamCommand}"
+                BackgroundColor="#171a21"
+                TextColor="White" />
+
+        <Label Text="データ管理" 
+               FontSize="18" 
+               FontAttributes="Bold" />
+
+        <!-- 以前話したリセットボタン -->
+        <Button Text="データベースを初期化" 
+                Command="{Binding ResetDatabaseCommand}"
+                BackgroundColor="Red" 
+                TextColor="White" />
+
+    </VerticalStackLayout>
+</ContentPage>

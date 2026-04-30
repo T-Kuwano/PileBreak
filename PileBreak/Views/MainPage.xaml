@@ -1,0 +1,76 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodel="clr-namespace:PileBreak.ViewModels"
+             x:Class="PileBreak.Views.MainPage"
+             Title="PileBreak">
+
+    <ContentPage.ToolbarItems>
+    <ToolbarItem Text="設定" 
+                 Command="{Binding GoToSettingCommand}" />
+</ContentPage.ToolbarItems>
+    
+    <Grid RowDefinitions="Auto, *">
+
+        <!-- 上部：カテゴリフィルタ -->
+        <HorizontalStackLayout Grid.Row="0" Padding="10" Spacing="10" HorizontalOptions="Center">
+            <Button Text="すべて" Command="{Binding FilterCommand}" CommandParameter="All" HeightRequest="40"/>
+            <Button Text="ゲーム" Command="{Binding FilterCommand}" CommandParameter="Game" HeightRequest="40"/>
+            <Button Text="本" Command="{Binding FilterCommand}" CommandParameter="Book" HeightRequest="40"/>
+        </HorizontalStackLayout>
+
+        <!-- メイン：リスト表示 -->
+        <RefreshView Grid.Row="1" Command="{Binding RefreshCommand}" IsRefreshing="{Binding IsRefreshing}">
+            <CollectionView ItemsSource="{Binding FilteredItems}" SelectionMode="None">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <!-- 右スワイプで解消 -->
+                        <SwipeView>
+                            <SwipeView.RightItems>
+                                <SwipeItems>
+                                    <SwipeItem Text="解消" 
+                                               BackgroundColor="Green"
+                                               Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:MainViewModel}}, Path=ClearItemCommand}"
+                                               CommandParameter="{Binding .}" />
+                                </SwipeItems>
+                            </SwipeView.RightItems>
+
+                            <Grid Padding="15" ColumnDefinitions="Auto, *">
+                                <!-- Steamのヘッダー画像を表示 -->
+                                <Image Grid.Column="0" 
+                                       Source="{Binding Icon}" 
+                                       WidthRequest="100" 
+                                       HeightRequest="56" 
+                                       Aspect="AspectFill"
+                                       VerticalOptions="Center" />
+
+                                <VerticalStackLayout Grid.Column="1" Margin="15,0" VerticalOptions="Center">
+                                    <Label Text="{Binding Title}" FontAttributes="Bold" FontSize="16" MaxLines="1" LineBreakMode="TailTruncation" />
+                                    <Label Text="{Binding CreatedDate, StringFormat='追加日: {0}'}" FontSize="12" TextColor="Gray" />
+                                </VerticalStackLayout>
+                            </Grid>
+                        </SwipeView>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+
+                <!-- データがない時の表示 -->
+                <CollectionView.EmptyView>
+                    <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center" Margin="0,50">
+                        <Label Text="積みコンテンツはありません" HorizontalOptions="Center" />
+                        <Label Text="右下の＋ボタンから追加しましょう" FontSize="12" TextColor="Gray" HorizontalOptions="Center" />
+                    </VerticalStackLayout>
+                </CollectionView.EmptyView>
+            </CollectionView>
+        </RefreshView>
+
+        <!-- 右下：追加メニューへの遷移ボタン -->
+        <Button Grid.Row="1" Text="＋"
+                FontSize="28" FontAttributes="Bold"
+                HeightRequest="66" WidthRequest="66" CornerRadius="33"
+                HorizontalOptions="End" VerticalOptions="End"
+                Margin="25"
+                Command="{Binding GoToAddMenuCommand}" 
+                BackgroundColor="#512BD4"
+                TextColor="White" />
+    </Grid>
+</ContentPage>

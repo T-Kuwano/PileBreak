@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="PileBreak.Views.AddMenuPage"
+             Title="追加メニュー">
+
+    <VerticalStackLayout Padding="30" Spacing="20" VerticalOptions="Center">
+
+        <Label Text="追加方法を選んでください" FontSize="20" HorizontalOptions="Center" Margin="0,0,0,20"/>
+
+        <!-- Steam同期ボタン -->
+        <Button Text="Steamからゲームをインポート"
+                Command="{Binding SyncSteamCommand}"
+                BackgroundColor="#1b2838"
+                TextColor="White"
+                HeightRequest="60" />
+
+        <!-- 本の検索（将来用） -->
+        <Button Text="本のバーコード/検索で追加"
+                Command="{Binding GoToBookSearchCommand}"
+                BackgroundColor="#8B4513"
+                TextColor="White"
+                HeightRequest="60" />
+
+        <!-- 手動入力（将来用） -->
+        <Button Text="手動で入力して追加"
+                Command="{Binding GoToManualAddCommand}"
+                BackgroundColor="#2E8B57"
+                TextColor="White"
+                HeightRequest="60" />
+
+        <Button Text="戻る"
+                Clicked="OnBackClicked"
+                BackgroundColor="Transparent"
+                TextColor="Gray" />
+
+    </VerticalStackLayout>
+</ContentPage>
