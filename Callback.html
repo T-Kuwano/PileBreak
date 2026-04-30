@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>PileBreak - Login Callback</title>
+</head>
+<body>
+    <p>ログインに成功しました。アプリに戻ります...</p>
+    <script>
+        // URLのパラメータから Steam ID を抽出
+        const urlParams = new URLSearchParams(window.location.search);
+        const openid = urlParams.get('openid.claimed_id');
+        
+        if (openid) {
+            // IDの末尾にある数字（Steam ID）を取り出す
+            const steamId = openid.split('/').pop();
+            
+            // MAUIアプリで設定した「カスタムURLスキーム」を呼び出す
+            // pilebreak://callback?id=12345... のような形式
+            window.location.href = `pilebreak://callback?id=${steamId}`;
+        } else {
+            document.body.innerText = "Steam IDの取得に失敗しました。";
+        }
+    </script>
+</body>
+</html>
