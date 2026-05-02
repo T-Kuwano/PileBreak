@@ -7,10 +7,8 @@ namespace PileBreak.Services
     {
         private readonly HttpClient _httpClient;
         private readonly DatabaseService _dbService;
-        // TODO:サーバ経由で取得する
-        //private string apiKey = Preferences.Default.Get("SteamApiKey", string.Empty);
         private string apiKey = Secrets.SteamApiKey;
-        private string myId = Preferences.Default.Get("steam_id", string.Empty);
+        private string myId = Preferences.Default.Get("SavedSteamId", string.Empty);
 
         public SteamApiService(DatabaseService dbService)
         {
@@ -42,10 +40,12 @@ namespace PileBreak.Services
                     IsCleared = 0
                 };
 
+                await _dbService.SaveSteamItemAsync(game);
                 await _dbService.SaveItemAsync(newItem);
             }
         }
     }
+
 
     // --- Steam API レスポンス用の型定義 ---
     public class SteamOwnedGamesResponse

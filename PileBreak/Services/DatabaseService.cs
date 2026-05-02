@@ -9,16 +9,15 @@ namespace PileBreak.Services
 
         private async Task Init()
         {
-            if (_database is not null) return;
+            if (_database is null)
+            {
+                var dbPath = Path.Combine(FileSystem.AppDataDirectory, "PileBreak.db3");
 
-            var dbPath = Path.Combine(FileSystem.AppDataDirectory, "PileBreak.db3");
-
-            // 書き込み権限などを含めたフラグを指定するとより確実です
-            _database = new SQLiteAsyncConnection(dbPath,
-                SQLiteOpenFlags.ReadWrite | SQLiteOpenFlags.Create | SQLiteOpenFlags.SharedCache);
-
-            // 親クラスではなく、必ず「実際に保存する子クラス」を指定します
+                _database = new SQLiteAsyncConnection(dbPath,
+                    SQLiteOpenFlags.ReadWrite | SQLiteOpenFlags.Create | SQLiteOpenFlags.SharedCache);
+            }
             await _database.CreateTableAsync<PileContentItem>();
+            await _database.CreateTableAsync<SteamGameInfo>();
         }
 
         public async Task<List<PileContentItem>> GetItemsAsync(bool isCleared)
@@ -29,12 +28,23 @@ namespace PileBreak.Services
                                  .Where(i => i.IsCleared == status)
                                  .ToListAsync();
         }
-
+        public async Task SaveSteamItemAsync(SteamGameInfo item)
+        {
+            await Init();
+            await _database.InsertOrReplaceAsync(item);
+        }
         public async Task SaveItemAsync(PileContentItem item)
         {
             await Init();
             if (item.Id != 0) await _database.UpdateAsync(item);
             else await _database.InsertAsync(item);
+        }
+
+        public async Task ResetItemAsync()
+        {
+            await Init();
+            await _database.DropTableAsync<PileContentItem>();
+            await _database.CreateTableAsync<PileContentItem>();
         }
     }
 }

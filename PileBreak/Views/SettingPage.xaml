@@ -17,15 +17,8 @@
                    Placeholder="17桁の数字を入力、またはログイン"
                    Keyboard="Numeric" />
         </VerticalStackLayout>
-
-        <Label Text="Steam API Key" FontSize="Caption" />
-        <Entry Text="{Binding SteamApiKey}" 
-       Placeholder="APIキーを入力してください"
-       IsPassword="True" />
-        <!-- キーは見えないように伏せると安全 -->
-
-        <!-- Steam ログインボタン -->
-        <Button Text="Steam でログインして取得"
+        
+        <Button Text="SteamでログインしてIDを取得"
                 Command="{Binding LoginSteamCommand}"
                 BackgroundColor="#171a21"
                 TextColor="White" />
@@ -34,7 +27,6 @@
                FontSize="18" 
                FontAttributes="Bold" />
 
-        <!-- 以前話したリセットボタン -->
         <Button Text="データベースを初期化" 
                 Command="{Binding ResetDatabaseCommand}"
                 BackgroundColor="Red" 
