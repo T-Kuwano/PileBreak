@@ -28,24 +28,16 @@ namespace PileBreak.Services
             var response = await _httpClient.GetFromJsonAsync<SteamOwnedGamesResponse>(url);
 
             if (response?.Response?.Games == null) return;
-
+            var threshold = Preferences.Default.Get("SavedThreshold", 0);
             foreach (var game in response.Response.Games)
             {
-                var newItem = new PileContentItem
-                {
-                    Title = game.Name,
-                    Category = "Game",
-                    SourceId = game.Appid.ToString(),
-                    Icon = $"https://cdn.akamai.steamstatic.com/steam/apps/{game.Appid}/header.jpg",
-                    IsCleared = 0
-                };
-
+                if (game.PlaytimeForever > threshold) continue;
+                // Steamからのデータを一応保存
                 await _dbService.SaveSteamItemAsync(game);
-                await _dbService.SaveItemAsync(newItem);
+                await _dbService.SyncFromSteamAsync(game);
             }
         }
     }
-
 
     // --- Steam API レスポンス用の型定義 ---
     public class SteamOwnedGamesResponse
@@ -55,13 +47,6 @@ namespace PileBreak.Services
 
     public class GamesContainer
     {
-        public List<SteamGameInfo> Games { get; set; }
-    }
-
-    public class SteamGameInfo
-    {
-        public int Appid { get; set; }
-        public string Name { get; set; }
-        public int Playtime_forever { get; set; }
+        public List<SteamRawData> Games { get; set; }
     }
 }

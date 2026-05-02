@@ -12,12 +12,18 @@
 
         <VerticalStackLayout Spacing="5">
             <Label Text="現在の Steam ID" FontSize="Caption" />
-            <!-- 保存されているIDを表示、または直接入力も可能 -->
             <Entry Text="{Binding SteamId}" 
                    Placeholder="17桁の数字を入力、またはログイン"
                    Keyboard="Numeric" />
         </VerticalStackLayout>
-        
+
+        <VerticalStackLayout Spacing="5">
+            <Label Text="何時間以上プレイしていないゲームを取得するか" FontSize="Caption" />
+            <Entry Text="{Binding Threshold}" 
+           Placeholder="0"
+           Keyboard="Numeric" />
+        </VerticalStackLayout>
+
         <Button Text="SteamでログインしてIDを取得"
                 Command="{Binding LoginSteamCommand}"
                 BackgroundColor="#171a21"

@@ -1,5 +1,4 @@
 ﻿using CommunityToolkit.Mvvm.Input;
-using CommunityToolkit.Mvvm.Messaging;
 using PileBreak.Services;
 
 namespace PileBreak.ViewModels
@@ -24,19 +23,28 @@ namespace PileBreak.ViewModels
             }
         }
 
+        private string _threshold = "";
+        public string Threshold
+        {
+            get => _threshold;
+            set
+            {
+                if (_threshold != value)
+                {
+                    _threshold = value;
+                    OnPropertyChanged();
+                    Preferences.Default.Set("SavedThreshold", value);
+                }
+            }
+        }
+
+        public record SettingChangedMessage(string Key, object Value);
+
         public SettingViewModel(DatabaseService dbService)
         {
             _dbService = dbService;
             SteamId = Preferences.Default.Get("SavedSteamId", string.Empty);
-
-            // メッセージの購読 (Subscribe)
-            WeakReferenceMessenger.Default.Register<string>(this, (r, id) =>
-            {
-                MainThread.BeginInvokeOnMainThread(() =>
-                {
-                    this.SteamId = id; // プロパティを更新してUIを変える
-                });
-            });
+            Threshold = Preferences.Default.Get("SavedThreshold", string.Empty);
         }
 
         /// <summary>

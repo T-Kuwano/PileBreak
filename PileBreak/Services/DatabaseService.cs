@@ -17,8 +17,9 @@ namespace PileBreak.Services
                     SQLiteOpenFlags.ReadWrite | SQLiteOpenFlags.Create | SQLiteOpenFlags.SharedCache);
             }
             await _database.CreateTableAsync<PileContentItem>();
-            await _database.CreateTableAsync<SteamGameInfo>();
+            await _database.CreateTableAsync<SteamRawData>();
         }
+
 
         public async Task<List<PileContentItem>> GetItemsAsync(bool isCleared)
         {
@@ -28,18 +29,54 @@ namespace PileBreak.Services
                                  .Where(i => i.IsCleared == status)
                                  .ToListAsync();
         }
-        public async Task SaveSteamItemAsync(SteamGameInfo item)
+
+        // Steam生データ登録処理
+        public async Task SaveSteamItemAsync(SteamRawData item)
         {
             await Init();
             await _database.InsertOrReplaceAsync(item);
         }
-        public async Task SaveItemAsync(PileContentItem item)
+
+        public async Task SyncFromSteamAsync(SteamRawData raw)
         {
             await Init();
-            if (item.Id != 0) await _database.UpdateAsync(item);
-            else await _database.InsertAsync(item);
+
+            var appId = raw.AppId.ToString();
+            // 1. 既にDBにあるか探す
+            var existingItem = await _database.Table<PileContentItem>()
+                                              .Where(x => x.SourceId == appId)
+                                              .FirstOrDefaultAsync();
+
+            if (existingItem == null)
+            {
+                // 初めて見るゲームなら新規登録
+                var newItem = new PileContentItem
+                {
+                    Title = raw.Name,
+                    Category = "Game",
+                    SourceId = raw.AppId.ToString(),
+                    Icon = $"https://cdn.akamai.steamstatic.com/steam/apps/{raw.AppId}/header.jpg",
+                    IsCleared = 0
+                };
+                await _database.InsertAsync(newItem);
+            }
+            else
+            {
+                // 既に持っているゲームなら、コメント以外を最新にする
+                existingItem.Title = raw.Name;
+
+                await _database.UpdateAsync(existingItem);
+            }
         }
 
+        // 表示用テーブル登録、更新処理
+        public async Task UpdateItemAsync(PileContentItem item)
+        {
+            await Init();
+            await _database.UpdateAsync(item);
+        }
+
+        // 表示用テーブルリセット処理
         public async Task ResetItemAsync()
         {
             await Init();

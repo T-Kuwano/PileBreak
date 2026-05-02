@@ -9,7 +9,6 @@ namespace PileBreak
         {
             InitializeComponent();
             Routing.RegisterRoute("AddMenuPage", typeof(Views.AddMenuPage));
-            Routing.RegisterRoute("SettingPage", typeof(Views.SettingPage));
         }
 
         /// <summary>

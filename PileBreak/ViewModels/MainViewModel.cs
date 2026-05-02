@@ -1,6 +1,7 @@
 ﻿using PileBreak.Models;
 using PileBreak.Services;
 using System.Collections.ObjectModel;
+using System.Text.RegularExpressions;
 using System.Windows.Input;
 
 namespace PileBreak.ViewModels
@@ -26,33 +27,22 @@ namespace PileBreak.ViewModels
         public ICommand ClearItemCommand { get; }
         public ICommand FilterCommand { get; }
         public ICommand GoToAddMenuCommand { get; }
-        public ICommand GoToSettingCommand { get; }
 
         public MainViewModel(DatabaseService dbService)
         {
             _dbService = dbService;
 
-            // 引っ張って更新する処理
             RefreshCommand = new Command(async () => await LoadItemsAsync());
-
-            // アイテムを解消する処理
             ClearItemCommand = new Command<PileContentItem>(async (item) => await ClearContentAsync(item));
-
-            // カテゴリで絞り込む処理
             FilterCommand = new Command<string>((category) => ApplyFilter(category));
 
             GoToAddMenuCommand = new Command(async () =>
             {
                 await Shell.Current.GoToAsync("AddMenuPage");
             });
-
-            GoToSettingCommand = new Command(async () =>
-            {
-                await Shell.Current.GoToAsync("SettingPage");
-            });
         }
 
-        // --- ここが MainPage.xaml.cs から呼ばれるメソッド ---
+
         public async Task LoadItemsAsync()
         {
             IsRefreshing = true;
@@ -84,11 +74,16 @@ namespace PileBreak.ViewModels
         {
             if (item == null) return;
 
+            string comment = await Shell.Current.DisplayPromptAsync("解消完了！", "このゲームはどうでしたか？", "保存", "キャンセル", "一言メモ...", maxLength: 50);
+            if (comment == null)
+            {
+                return;
+            }
+            string sanitized = Regex.Replace(comment, @"[^\w\s\u3040-\u309F\u30A0-\u30FF\u4E00-\u9FAF（）！？」「：；、。,.!?]", "");
             item.IsCleared = 1;
             item.ClearedDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-            item.Comment = "解消済み";
-
-            await _dbService.SaveItemAsync(item);
+            item.Comment = sanitized;
+            await _dbService.UpdateItemAsync(item);
 
             // リストから削除して画面を更新
             _allItems.Remove(item);

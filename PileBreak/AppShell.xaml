@@ -7,11 +7,29 @@
     Title="PileBreak">
 
     <TabBar>
-        <Tab Title="積ゲー" Icon="todo_icon.png">
-            <ShellContent ContentTemplate="{DataTemplate local:MainPage}" />
+        <!-- 積み（メイン画面） -->
+        <Tab Title="Pile" Icon="pile_icon.png">
+            <ShellContent 
+            Title="すべて"
+            ContentTemplate="{DataTemplate local:MainPage}"
+            Route="MainPage" />
+        </Tab>
+
+        <!-- 消化済み（履歴画面） -->
+        <Tab Title="History" Icon="history_icon.png">
+            <ShellContent 
+            Title="消化済み"
+            ContentTemplate="{DataTemplate local:HistoryPage}" />
+        </Tab>
+
+        <!-- 設定 -->
+        <Tab Title="Settings" Icon="settings_icon.png">
+            <ShellContent 
+            Title="設定"
+            ContentTemplate="{DataTemplate local:SettingPage}" />
         </Tab>
     </TabBar>
 
-    
+
 
 </Shell>

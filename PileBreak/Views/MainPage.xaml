@@ -5,11 +5,6 @@
              x:Class="PileBreak.Views.MainPage"
              Title="PileBreak">
 
-    <ContentPage.ToolbarItems>
-    <ToolbarItem Text="設定" 
-                 Command="{Binding GoToSettingCommand}" />
-</ContentPage.ToolbarItems>
-    
     <Grid RowDefinitions="Auto, *">
 
         <!-- 上部：カテゴリフィルタ -->

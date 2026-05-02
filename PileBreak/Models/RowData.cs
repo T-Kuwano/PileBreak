@@ -1,4 +1,5 @@
 ﻿using SQLite;
+using System.Text.Json.Serialization;
 
 namespace PileBreak.Models
 {
@@ -6,11 +7,23 @@ namespace PileBreak.Models
     public class SteamRawData
     {
         [PrimaryKey]
-        public string AppId { get; set; }
-        public string Name { get; set; }
-        public string HeaderImage { get; set; }
-        public int Playtime { get; set; }
-        public string LastUpdated { get; set; }
+        [JsonPropertyName("appid")]
+        public int AppId { get; set; }
+
+        [JsonPropertyName("name")]
+        public string Name { get; set; } = string.Empty;
+
+        [JsonPropertyName("img_icon_url")]
+        public string ImgIconUrl { get; set; } = string.Empty;
+
+        [JsonPropertyName("playtime_forever")]
+        public int PlaytimeForever { get; set; }
+
+        [JsonPropertyName("playtime_windows_forever")]
+        public int PlaytimeWindowsForever { get; set; }
+
+        [JsonPropertyName("rtime_last_played")]
+        public int RtimeLastPlayed { get; set; }
     }
 
     // 書籍用
