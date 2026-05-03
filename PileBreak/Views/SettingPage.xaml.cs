@@ -13,4 +13,11 @@ public partial class SettingPage : ContentPage
         _viewModel = viewModel;
         BindingContext = _viewModel;
     }
+
+    private void OnBackgroundTapped(object sender, EventArgs e)
+    {
+        SteamIdEntry.Unfocus();
+        ThresholdEntry.Unfocus();
+    }
+
 }

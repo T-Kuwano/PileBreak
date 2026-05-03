@@ -4,39 +4,42 @@
              x:Class="PileBreak.Views.SettingPage"
              Title="設定">
 
-    <VerticalStackLayout Padding="20" Spacing="20">
-
-        <Label Text="Steam 連携設定" 
+    <ScrollView x:Name="BackgroundScrollView">
+        <ScrollView.GestureRecognizers>
+            <TapGestureRecognizer Tapped="OnBackgroundTapped" />
+        </ScrollView.GestureRecognizers>
+        <VerticalStackLayout Padding="20" Spacing="20" x:Name="MainLayout">
+            <Label Text="Steam 連携設定" 
                FontSize="18" 
                FontAttributes="Bold" />
 
-        <VerticalStackLayout Spacing="5">
-            <Label Text="現在の Steam ID" FontSize="Caption" />
-            <Entry Text="{Binding SteamId}" 
+            <VerticalStackLayout Spacing="5">
+                <Label Text="現在の Steam ID" FontSize="Caption" />
+                <Entry x:Name="SteamIdEntry" Text="{Binding SteamId}" 
                    Placeholder="17桁の数字を入力、またはログイン"
                    Keyboard="Numeric" />
-        </VerticalStackLayout>
+            </VerticalStackLayout>
 
-        <VerticalStackLayout Spacing="5">
-            <Label Text="何時間以上プレイしていないゲームを取得するか" FontSize="Caption" />
-            <Entry Text="{Binding Threshold}" 
+            <VerticalStackLayout Spacing="5">
+                <Label Text="何時間以上プレイしていないゲームを取得するか" FontSize="Caption" />
+                <Entry x:Name="ThresholdEntry" Text="{Binding Threshold}" 
            Placeholder="0"
            Keyboard="Numeric" />
-        </VerticalStackLayout>
+            </VerticalStackLayout>
 
-        <Button Text="SteamでログインしてIDを取得"
+            <Button Text="SteamでログインしてIDを取得"
                 Command="{Binding LoginSteamCommand}"
                 BackgroundColor="#171a21"
                 TextColor="White" />
 
-        <Label Text="データ管理" 
+            <Label Text="データ管理" 
                FontSize="18" 
                FontAttributes="Bold" />
 
-        <Button Text="データベースを初期化" 
+            <Button Text="データベースを初期化" 
                 Command="{Binding ResetDatabaseCommand}"
                 BackgroundColor="Red" 
                 TextColor="White" />
-
-    </VerticalStackLayout>
+        </VerticalStackLayout>
+    </ScrollView>
 </ContentPage>

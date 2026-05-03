@@ -31,11 +31,13 @@ namespace PileBreak
             builder.Services.AddSingleton<MainViewModel>();
             builder.Services.AddTransient<AddMenuViewModel>();
             builder.Services.AddTransient<SettingViewModel>();
+            builder.Services.AddTransient<HistoryViewModel>();
 
             // Viewsの登録
             builder.Services.AddSingleton<MainPage>();
             builder.Services.AddTransient<AddMenuPage>();
             builder.Services.AddTransient<SettingPage>();
+            builder.Services.AddTransient<HistoryPage>();
 
             return builder.Build();
         }

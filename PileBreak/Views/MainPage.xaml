@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewmodel="clr-namespace:PileBreak.ViewModels"
              x:Class="PileBreak.Views.MainPage"
-             Title="PileBreak">
+             Title="積まれ">
 
     <Grid RowDefinitions="Auto, *">
 

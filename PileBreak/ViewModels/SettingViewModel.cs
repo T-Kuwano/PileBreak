@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using PileBreak.Services;
 
 namespace PileBreak.ViewModels
@@ -40,11 +41,23 @@ namespace PileBreak.ViewModels
 
         public record SettingChangedMessage(string Key, object Value);
 
+
         public SettingViewModel(DatabaseService dbService)
         {
             _dbService = dbService;
             SteamId = Preferences.Default.Get("SavedSteamId", string.Empty);
             Threshold = Preferences.Default.Get("SavedThreshold", string.Empty);
+
+            // メッセージの受信登録（リスナー）
+            WeakReferenceMessenger.Default.Register<SteamIdChangedMessage>(this, (r, m) =>
+            {
+                // m.Value に送信された ID が入っています
+                // 必ずメインスレッドで UI プロパティを更新する
+                MainThread.BeginInvokeOnMainThread(() =>
+                {
+                    this.SteamId = m.Value;
+                });
+            });
         }
 
         /// <summary>

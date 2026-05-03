@@ -37,6 +37,8 @@ namespace PileBreak
                     {
                         WeakReferenceMessenger.Default.Send(steamId);
                     });
+
+                    WeakReferenceMessenger.Default.Send(new SteamIdChangedMessage(steamId));
                 }
             }
         }
